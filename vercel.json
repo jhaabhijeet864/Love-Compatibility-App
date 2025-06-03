@@ -1,0 +1,15 @@
+{
+  "builds": [
+    { "src": "UI/**/*", "use": "@vercel/static" },
+    { "src": "Backend/**/*.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "Backend/server.js" },
+    { "src": "/(.*)", "dest": "UI/$1" }
+
+  ],
+  "env": {
+    "API_URL": "http://localhost:3000/api/compatibility"
+  }
+}
+

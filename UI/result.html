@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Predictor - Results</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Love Predictor</h1>
+    
+    <!-- Loading spinner -->
+    <div id="loading" class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Calculating love compatibility...</p>
+    </div>
+    
+    <!-- Error message -->
+    <div id="error" class="error-container">
+      <p id="errorMessage">An error occurred. Please try again later.</p>
+    </div>
+    
+    <!-- Results container -->
+    <div id="results" class="results-container">
+      <h2>Love Compatibility Results</h2>
+      
+      <div class="names-display">
+        <span id="resultName1">Name 1</span>
+        <span class="heart">❤️</span>
+        <span id="resultName2">Name 2</span>
+      </div>
+      
+      <div class="meter-container">
+        <div class="meter">
+          <div id="meter-fill" class="meter-fill"></div>
+        </div>
+        <div class="percentage">
+          <span id="compatibilityResult">0</span>%
+        </div>
+      </div>
+      
+      <p id="compatibilityMessage" class="compatibility-message"></p>
+      
+      <button id="tryAgainBtn" class="try-again-btn">Try Another Couple</button>
+    </div>
+  </div>
+  
+  <script src="result.js"></script>
+</body>
+</html>
