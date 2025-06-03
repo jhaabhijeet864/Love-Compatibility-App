@@ -3,6 +3,8 @@ import { MongoClient } from 'mongodb';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { calculateCompatibility } from './compatibility.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -18,14 +20,9 @@ async function connectToDatabase() {
   if (cachedDb) return cachedDb;
 
   console.log("Attempting to connect to MongoDB...");
-  console.log("Connection string:", uri.replace(/:[^:]*@/, ':****@')); // Hide password in logs
   
   try {
-    const client = new MongoClient(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    });
-    
+    const client = new MongoClient(uri);
     await client.connect();
     console.log("✅ Successfully connected to MongoDB");
     
@@ -38,24 +35,17 @@ async function connectToDatabase() {
   }
 }
 
-// Compatibility endpoint
+// API endpoint for compatibility
 app.post('/api/compatibility', async (req, res) => {
   const { name1, name2 } = req.body;
 
-  console.log("★★★ Received names:", name1, name2);
+  console.log("Received names:", name1, name2);
   
-  // Log normalized names
-  const n1 = name1.replace(/\s+/g, '').toLowerCase();
-  const n2 = name2.replace(/\s+/g, '').toLowerCase();
-  console.log("★★★ Normalized names:", n1, n2);
-  
-  // Special case check here for debugging
-  if ((n1 === 'suruchi' && n2 === 'abhijeet') || (n1 === 'abhijeet' && n2 === 'suruchi')) {
-    console.log("✨ SPECIAL MATCH DETECTED before calling calculateCompatibility!");
+  if (!name1 || !name2) {
+    return res.status(400).json({ message: 'Please provide both names.' });
   }
 
   const compatibility = calculateCompatibility(name1, name2);
-
   console.log("Calculated compatibility:", compatibility);
 
   try {
@@ -76,10 +66,19 @@ app.post('/api/compatibility', async (req, res) => {
   }
 });
 
-// For local testing
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Serve static files (for local development)
+if (process.env.NODE_ENV !== 'production') {
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  app.use(express.static(path.join(__dirname, '../UI')));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../UI/index.html'));
+  });
+
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
 
 export default app;
