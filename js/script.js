@@ -22,6 +22,10 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     errorElement.style.display = 'none';
+
+    if ((name1 === 'suruchi' && name2 === 'abhijeet') || (name1 === 'abhijeet' && name2 === 'suruchi')) {
+      return 1000;
+    }
     
     // Redirect to result page with names as URL parameters
     window.location.href = `result.html?name1=${encodeURIComponent(name1)}&name2=${encodeURIComponent(name2)}`;
@@ -37,4 +41,49 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Focus on first input when page loads
   name1Input.focus();
+});
+
+function calculateCompatibility(name1, name2) {
+  const n1 = name1.replace(/\s+/g, '').toLowerCase();
+  const n2 = name2.replace(/\s+/g, '').toLowerCase();
+
+  console.log("Normalized names:", n1, n2);
+
+  if ((n1 === 'suruchi' && n2 === 'abhijeet') || (n1 === 'abhijeet' && n2 === 'suruchi')) {
+    console.log("Special case triggered for Suruchi and Abhijeet");
+    return 1000;
+  }
+
+  // ...existing logic...
+}
+
+app.post('/api/compatibility', async (req, res) => {
+  const { name1, name2 } = req.body;
+
+  console.log("Received names:", name1, name2);
+
+  if (!name1 || !name2) {
+    return res.status(400).json({ message: 'Please provide both names.' });
+  }
+
+  const compatibility = calculateCompatibility(name1, name2);
+
+  console.log("Calculated compatibility:", compatibility);
+
+  try {
+    const db = await connectToDatabase();
+    const collection = db.collection('compatibilityChecks');
+
+    await collection.insertOne({
+      name1,
+      name2,
+      compatibility,
+      createdAt: new Date()
+    });
+
+    return res.status(200).json({ compatibility });
+  } catch (error) {
+    console.error('Database error:', error);
+    return res.status(500).json({ message: 'An error occurred. Please try again later.' });
+  }
 });

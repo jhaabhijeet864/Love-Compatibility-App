@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ name1, name2 }),
+    body: JSON.stringify({ 
+      name1, 
+      name2 
+    }),
   })
   .then(response => {
     console.log("API Response status:", response.status);

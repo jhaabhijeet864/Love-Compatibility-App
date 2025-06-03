@@ -9,7 +9,7 @@
 
   ],
   "env": {
-    "API_URL": "http://localhost:3000/api/compatibility"
+    "API_URL": "http://localhost:5000/api/compatibility"
   }
 }
 

@@ -37,8 +37,27 @@ function calculateCompatibility(name1, name2) {
   const n1 = name1.replace(/\s+/g, '').toLowerCase();
   const n2 = name2.replace(/\s+/g, '').toLowerCase();
 
+  console.log(`DEBUG - Checking special case: "${n1}" and "${n2}"`);
+
+  // Special case: If names are "suruchi" and "abhijeet" in any order, return 1000%
+  if ((n1 === 'suruchi' && n2 === 'abhijeet') || (n1 === 'abhijeet' && n2 === 'suruchi')) {
+    console.log("✨ SPECIAL MATCH DETECTED: Suruchi and Abhijeet! ✨");
+    return 1000;
+  }
+  
+  if (n1 === 'suruchi' && n2 === 'rohan') {
+    return 0;
+  }
+  
+  if (n1 === 'sonali' && n2 === 'harsh') {
+    return 100;
+  }
+  
+  if (n1 === 'siya' && n2 === 'abhijeet') {
+    return 85;
+  }
+
   // Helper function to calculate a score for each letter (a=1, b=2, ..., z=26).
-  // This function ignores any characters that are not between a and z.
   const getScore = (str) =>
     Array.from(str).reduce((acc, char) => {
       const code = char.charCodeAt(0);
@@ -56,7 +75,6 @@ function calculateCompatibility(name1, name2) {
   const diff = Math.abs(score1 - score2);
   
   // Compute a "difference factor" using exponential decay.
-  // When the difference is 0, this factor will be 100, and it decreases as the difference increases.
   const diffFactor = Math.floor(Math.exp(-diff / 50) * 100);
 
   // Calculate how many unique letters are common between the two names.
@@ -73,6 +91,36 @@ function calculateCompatibility(name1, name2) {
   compatibility = Math.min(100, Math.max(0, compatibility));
 
   return compatibility;
+}
+
+/**
+ * Get a compatibility message based on the compatibility percentage.
+ * 
+ * This function provides a custom message for various ranges of compatibility:
+ * - 1000%: A match made in heaven!
+ * - 90% and above: Perfect match!
+ * - 75% to 89%: Great match!
+ * - 60% to 74%: Good match!
+ * - 40% to 59%: Decent match.
+ * - 20% to 39%: Not a great match.
+ * - Below 20%: Maybe just be friends?
+ */
+function getCompatibilityMessage(percentage) {
+  if (percentage == 1000) {
+    return "A match made in heaven! Your love transcends all boundaries! 💖✨\n Biah Kar lo na Ji";
+  } else if (percentage <= 90) {
+    return "A match made in heaven! Your love transcends all boundaries! 💖✨\n Biah Kar lo na Ji";
+  } else if (percentage >= 75) {
+    return "Great match! Your love has amazing potential! 💖";
+  } else if (percentage >= 60) {
+    return "Good match! You have a strong connection! 😊";
+  } else if (percentage >= 40) {
+    return "Decent match. You might need to work on your relationship. 🌱";
+  } else if (percentage >= 20) {
+    return "Not a great match. But opposites sometimes attract! 🤔";
+  } else {
+    return "Maybe just be friends? The stars aren't aligned for romance. 🌟";
+  }
 }
 
 /**

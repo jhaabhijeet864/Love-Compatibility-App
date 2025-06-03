@@ -57,14 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
   })
   .then(data => {
     console.log("API Response data:", data);
-    // Display results
     displayResults(name1, name2, data.compatibility);
   })
   .catch(error => {
     console.error('Error:', error);
-    loadingElement.style.display = 'none';
-    errorElement.style.display = 'block';
-    errorMessage.textContent = 'An error occurred. Please try again later. Check the console for details.';
   });
 
   function displayResults(name1, name2, compatibility) {

@@ -42,19 +42,26 @@ async function connectToDatabase() {
 app.post('/api/compatibility', async (req, res) => {
   const { name1, name2 } = req.body;
 
-  if (!name1 || !name2) {
-    return res.status(400).json({ message: 'Please provide both names.' });
+  console.log("★★★ Received names:", name1, name2);
+  
+  // Log normalized names
+  const n1 = name1.replace(/\s+/g, '').toLowerCase();
+  const n2 = name2.replace(/\s+/g, '').toLowerCase();
+  console.log("★★★ Normalized names:", n1, n2);
+  
+  // Special case check here for debugging
+  if ((n1 === 'suruchi' && n2 === 'abhijeet') || (n1 === 'abhijeet' && n2 === 'suruchi')) {
+    console.log("✨ SPECIAL MATCH DETECTED before calling calculateCompatibility!");
   }
 
-  // Calculate compatibility
   const compatibility = calculateCompatibility(name1, name2);
 
+  console.log("Calculated compatibility:", compatibility);
+
   try {
-    // Connect to MongoDB
     const db = await connectToDatabase();
     const collection = db.collection('compatibilityChecks');
 
-    // Insert the compatibility record
     await collection.insertOne({
       name1,
       name2,
@@ -71,7 +78,7 @@ app.post('/api/compatibility', async (req, res) => {
 
 // For local testing
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
 });
 

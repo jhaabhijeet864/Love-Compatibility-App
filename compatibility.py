@@ -2,6 +2,9 @@ def calculate_compatibility(name1, name2):
     """
     Calculate love compatibility between two names.
     
+    Special cases:
+    - "Suruchi" and "Abhijeet" (any order) = 1000% (perfect match)
+    
     The algorithm:
     1. Normalizes names (lowercase, no spaces)
     2. Calculates a letter score (a=1, b=2, ..., z=26)
@@ -12,6 +15,24 @@ def calculate_compatibility(name1, name2):
     # Normalize names
     n1 = name1.lower().replace(" ", "")
     n2 = name2.lower().replace(" ", "")
+    
+    # Special case detection
+    if (n1 == "suruchi" and n2 == "abhijeet") or (n1 == "abhijeet" and n2 == "suruchi"):
+        print(f"✨ SPECIAL MATCH DETECTED: {name1} and {name2}! ✨")
+        return 100000000 # Perfect match
+    
+    # You can add more special cases here
+    if (n1 == "sonali" and n2 == "harsh") or (n1 == "harsh" and n2 == "sonali"):
+        return 100
+    
+    if (n1 == "siya" and n2 == "abhijeet") or (n1 == "abhijeet" and n2 == "siya"):
+        return 85
+        
+    if (n1 == "suruchi" and n2 == "rohan") or (n1 == "rohan" and n2 == "suruchi"):
+        return 0
+    
+    if (n1 == "tarun" and n2 == "eeshal") or (n1 == "eeshal" and n2 == "tarun"):
+        return 150
     
     # Helper function to calculate a score for each letter
     def get_score(s):
@@ -37,5 +58,17 @@ def calculate_compatibility(name1, name2):
     # Final compatibility
     compatibility = math.floor((diff_factor + common_factor) / 2)
     compatibility = min(100, max(0, compatibility))
+    # Only check surnames if both names have at least two parts
+    if len(name1_parts) > 1 and len(name2_parts) > 1:
+        surname1 = name1_parts[-1]
+        surname2 = name2_parts[-1]
+        
+        if surname1 == surname2:
+            print(f"👨‍👩‍👧‍👦 Same surname detected: {surname1}! Adding 30% bonus.")
+            compatibility += 30
+    
+    # Clamp final value between 0-100
+    compatibility = min(100, max(0, compatibility))
     
     return compatibility
+
